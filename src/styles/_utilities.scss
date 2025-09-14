@@ -1,0 +1,16 @@
+// Global element resets & helpers
+@use './theme' as *;
+
+html, body { height: 100%; }
+body {
+  margin: 0;
+  background: $color-bg;
+  color: $color-ink;
+  font-family: $font-stack;
+}
+
+a { color: $color-accent; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+.u-center { display: grid; place-items: center; }
+.u-muted  { color: $color-muted; }

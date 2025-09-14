@@ -1,0 +1,19 @@
+// Reusable helpers
+@use './theme' as *;
+
+@mixin card {
+  background: linear-gradient(180deg, #141414, #0f0f0f);
+  border: 1px solid $color-border;
+  border-radius: $radius-xl;
+  padding: 20px;
+  box-shadow: $shadow-elev;
+}
+
+@mixin focus-ring {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba($color-accent, 0.4);
+}
+
+@mixin fluid-type($min, $max) {
+  font-size: clamp($min, 6vw, $max);
+}

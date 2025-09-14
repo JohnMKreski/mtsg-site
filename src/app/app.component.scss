@@ -1,0 +1,290 @@
+// ============================================
+// mtsg — app.component.scss (cleaned & organized)
+// ============================================
+
+// 0) Imports & rhythm tokens
+@use 'index' as *;        // exposes theme tokens & mixins (from src/styles)
+$page-row: 240px;         // desktop grid row height multiple
+
+// 1) Page grid container + background grid overlay
+.page {
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-flow: row dense;          // packs tiles tightly
+  grid-auto-rows: $page-row;          // stable track height for row spans
+  gap: $gap;
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  position: relative;
+  isolation: isolate;
+  z-index: 0;
+
+  &::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    z-index: 0;                       // stays behind cards
+    pointer-events: none;
+    background:
+      repeating-linear-gradient(
+        to right,
+        rgba($color-ink, 0.06) 0px,
+        rgba($color-ink, 0.06) 1px,
+        transparent 1px,
+        transparent 32px
+      ),
+      repeating-linear-gradient(
+        to bottom,
+        rgba($color-ink, 0.06) 0px,
+        rgba($color-ink, 0.06) 1px,
+        transparent 1px,
+        transparent 32px
+      );
+    box-shadow: inset 0 0 120px rgba(0,0,0,0.6);
+  }
+}
+
+// 2) Bento cards (base)
+.card {
+  @include card;                       // from mixins: panel gradient, border, radius, shadow
+  position: relative;
+  z-index: 1;                          // above page overlay
+  transition: transform .18s ease, opacity .18s ease;
+  background: linear-gradient(180deg, rgba(20,20,20,0.92), rgba(10,10,10,0.92));
+  border-color: rgba(255,255,255,0.06);
+  backdrop-filter: saturate(110%);
+}
+
+// 3) Desktop layout (12-col mosaic)
+.hero   { grid-column: span 4; grid-row: span 3; display: grid; place-items: center; min-width: 0; }
+.about  { grid-column: span 4; grid-row: auto; }
+.music  { grid-column: span 4; grid-row: auto; }
+.shows  { grid-column: span 4; grid-row: auto; }
+.poster { grid-column: span 4; grid-row: span 2; }
+.contact{ grid-column: span 4; grid-row: auto; }
+
+// 4) Hero content (desktop defaults)
+.hero-inner { width: 100%; min-width: 0; text-align: center; }
+
+.hero-art {
+  display: grid;
+  place-items: center;
+  min-width: 0;
+}
+
+.logo-svg {
+  display: block;
+  height: auto;
+  max-width: 520px;      // desktop cap
+  margin: 0 auto 8px;
+  animation: logo-breathe 4s ease-in-out infinite;
+}
+
+.brand-mark {
+  display: block;
+  margin: 0 auto;
+  width: auto;
+  height: auto;
+  max-width: 180px;      // desktop cap for PNG logo
+  image-rendering: -webkit-optimize-contrast;
+  filter:
+    drop-shadow(0 0 10px rgba($color-accent, 0.25))
+    drop-shadow(0 0 24px rgba($color-accent, 0.15));
+}
+
+/* Tagline block sizes to the text; EQ becomes an underline shelf */
+.tagline {
+  display: inline-block;   /* width equals the text width */
+  min-width: 0;
+}
+
+.tagline .tag {
+  display: inline-block;   /* ensure container width follows the text */
+  margin: 0 0 4px;         /* a bit of breathing space above the shelf */
+}
+
+/* Optional: tighten on phones */
+@media (max-width: 640px) {
+  .tagline .eq.eq--underline { gap: 4px; height: 8px; }
+}
+
+/* Thin, many-bar underline */
+.tagline .eq.eq--underline.eq--thin {
+  --bar-w: 2px;         /* bar thickness */
+  --eq-min: 20%;        /* animation floor */
+  --eq-max: 60%;        /* animation peak */
+
+  display: grid;
+  grid-auto-flow: column;
+  grid-auto-columns: var(--bar-w);
+gap: calc((100% - var(--bars) * var(--bar-w)) / max(1, (var(--bars) - 1)));
+
+  width: 100%;
+  height: var(--underline-h);         /* underline thickness */
+  margin: 0;
+//   transform: scaleY(-1);
+  transform-origin: top;
+}
+
+.tagline .eq.eq--underline.eq--thin span {
+  width: var(--bar-w);
+  background: $color-accent;
+  border-radius: 2px 2px 0 0;
+  animation: eq-amp var(--dur) ease-in-out infinite alternate;
+  /* LEFT ➜ RIGHT wave (i = 0..bars-1) */
+   animation-delay: calc((var(--bars) - 1 - var(--i)) * (var(--dur) / var(--bars)) * -1);}
+
+@media (max-width: 640px) {
+  .tagline .eq.eq--underline.eq--thin { --underline-h: 8px; }
+}
+
+
+// Equalizer under the wordmark
+// .eq {
+//   display: inline-flex;
+//   gap: 6px;
+//   height: 22px;
+//   align-items: flex-end;
+//   margin: 8px 0 0;
+
+//   span {
+//     width: 6px;
+//     background: $color-accent;
+//     border-radius: 3px;
+//     opacity: .9;
+//     animation: eq-bounce 900ms ease-in-out infinite alternate;
+
+//     &:nth-child(1) { animation-delay: 0ms; }
+//     &:nth-child(2) { animation-delay: 90ms; }
+//     &:nth-child(3) { animation-delay: 180ms; }
+//     &:nth-child(4) { animation-delay: 270ms; }
+//     &:nth-child(5) { animation-delay: 360ms; }
+//   }
+// }
+
+// 5) Section content & utilities
+h2 { margin: 0 0 12px; font-size: 1.2rem; letter-spacing: .04em; text-transform: uppercase; }
+p  { margin: 0 0 10px; color: #d6d6d6; }
+
+.link-row {
+  display: block; color: $color-ink; opacity: .9; margin: 8px 0;
+  &:hover { text-decoration: underline; }
+}
+
+.embed-col iframe {
+  border: 0;
+  border-radius: 12px;
+  background: #000;
+}
+
+.list {
+  list-style: none; padding: 0; margin: 0; display: grid; gap: 8px;
+  li {
+    display: flex; gap: 10px; align-items: baseline;
+    span { min-width: 72px; color: $color-accent; font-weight: 700; }
+  }
+}
+
+.poster-box {
+  border: 1px dashed #2a2a2a;
+  border-radius: 12px;
+  min-height: 220px;
+  display: grid;
+  place-items: center;
+  color: $color-muted;
+}
+
+// 6) Optional micro-animation trigger (kept for future shuffle)
+.page.mixing .card {
+  transform: scale(0.98);
+  opacity: 0.9;
+}
+
+// 7) Fixed neon overlay (on top, very subtle)
+.fx-grid {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 999;
+  opacity: 0.12;
+  mix-blend-mode: screen;
+  background:
+    repeating-linear-gradient(
+      to right,
+      rgba($color-accent, 0.35) 0px,
+      rgba($color-accent, 0.35) 1px,
+      transparent 1px,
+      transparent 32px
+    ),
+    repeating-linear-gradient(
+      to bottom,
+      rgba($color-accent, 0.35) 0px,
+      rgba($color-accent, 0.35) 1px,
+      transparent 1px,
+      transparent 32px
+    );
+}
+
+// 8) Animations
+@keyframes eq-bounce {
+  0%   { height: 10%; transform: translateY(0); }
+  50%  { height: 85%; transform: translateY(-2px); }
+  100% { height: 40%; transform: translateY(0); }
+}
+
+@keyframes eq-amp {
+  0%   { height: var(--eq-min, 25%); }
+  100% { height: var(--eq-max, 100%); }
+}
+
+@keyframes logo-breathe {
+  0%,100% { filter: none; opacity: 1; }
+  50%     { opacity: .96; }
+}
+
+// 9) Responsive layouts
+// Tablet: hero goes full width, splits into 2 columns (image | meta). Other tiles become 2-up.
+@media (max-width: 1024px) {
+  .hero   { grid-column: span 12; grid-row: span 2; }   // adjust span to fit content height
+  .about  { grid-column: span 6; grid-row: auto; }
+  .music  { grid-column: span 6; grid-row: auto; }
+  .shows  { grid-column: span 6; grid-row: auto; }
+  .poster { grid-column: span 6; grid-row: span 2; }
+  .contact{ grid-column: span 6; grid-row: auto; }
+
+  .hero-inner { text-align: center; }                      // better with split layout
+
+  // Split hero content: image | meta
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 16px;
+    align-items: center;
+    min-width: 0;
+  }
+  .hero-art, .hero-meta { min-width: 0; }
+  .hero-meta { display: grid; gap: 8px; justify-items: center; }
+
+  // Scale caps for tighter space
+  .brand-mark { max-width: 240px; }
+  .logo-svg   { max-width: 380px; }
+  .eq { height: 20px; gap: 5px; }
+  .eq span { width: 5px; }
+}
+
+// Phone: keep two-column split but smaller caps; grid switches to 6-col and single-card rows.
+@media (max-width: 640px) {
+  .page { grid-template-columns: repeat(6, 1fr); padding: 16px; }
+  .card { grid-column: span 6; grid-row: auto; }
+
+  .hero-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+  }
+
+  .brand-mark { max-width: 120px; }
+  .logo-svg   { max-width: 220px; }
+  .eq { height: 18px; gap: 4px; }
+  .eq span { width: 4px; }
+}

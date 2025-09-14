@@ -1,0 +1,22 @@
+// Core theme tokens for mtsg site
+
+// Brand
+$color-bg: #000000;  // Black
+$color-ink: #ffffff; // White
+$color-accent: #00E5FF !default; // Neon Blue (default)
+// Alternatives you might like:
+// $color-accent: #00F0FF !default; // punchier cyan
+// $color-accent: #18FFFF !default; // slightly softer neon
+
+// Neutral/support
+$color-panel: #101010;
+$color-border: #1f1f1f;
+$color-muted: #a9b0b6;
+
+// Radii / spacing / shadow
+$radius-xl: 18px;
+$gap: 16px;
+$shadow-elev: 0 10px 24px rgba(0,0,0,.35);
+
+// Typography
+$font-stack: 'Inconsolata', Consolas, 'Courier New', monospace;
