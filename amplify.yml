@@ -6,7 +6,7 @@ frontend:
         - npm ci
     build:
       commands:
-        - npm run build
+        - ng build --output-path=dist/mtsg-site
   artifacts:
     baseDirectory: dist/mtsg-site
     files:
